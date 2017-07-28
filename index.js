@@ -214,10 +214,6 @@ class ObjectWithValidation {
             xhr.send(this.getData());
         }
     }
-
-    request() {
-
-    }
 }
 
 let MyForm = undefined;
