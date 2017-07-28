@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css?family=Roboto');
+
+* {
+    outline: none;
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+html, body, .fill {
+
+    height: 100%;
+    min-height: 100%;
+}
+
+body, button, input {
+    font-size: 2rem; /* Because bad poor eyesight :( */
+    margin: 1px 0;
+}
+
+input {
+    background: none;
+    border: 1px solid lightgray;
+    padding: 0.5rem;
+}
+
+.error {
+    border-color: red;
+}
+
+.success {
+    border-color: green;
+}
+
+.column,
+.row {
+    display: flex;
+}
+
+.column {
+    flex-direction: column;
+}
+
+.center {
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+}
+
+.start-center {
+    align-items: center;
+    justify-content: flex-start;
+}
+
+label {
+    min-width: 100px;
+}

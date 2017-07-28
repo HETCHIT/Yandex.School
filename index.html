@@ -1,10 +1,42 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8"/>
     <title>Yandex Test Project</title>
+
+    <link rel="stylesheet" type="text/css" href="style/style.css"/>
+
+    <script src="index.js"></script>
 </head>
 <body>
+
+<div class="fill row center">
+
+    <fieldset>
+        <legend>Form</legend>
+        <form name="myForm" id="myForm" action="success.json">
+            <div class="row start-center">
+                <label>fio</label>
+                <input type="text" name="fio" placeholder="fio"/>
+            </div>
+
+            <div class="row start-center">
+                <label>email</label>
+                <input type="email" name="email" placeholder="email"/>
+            </div>
+
+            <div class="row start-center">
+                <label>phone</label>
+                <input type="text" name="phone" placeholder="phone" maxlength="16"/>
+            </div>
+
+            <button type="submit" id="submitButton">submit</button>
+        </form>
+
+
+        <div id="resultContainer"></div>
+    </fieldset>
+</div>
 
 </body>
 </html>
