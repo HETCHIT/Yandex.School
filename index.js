@@ -1,6 +1,7 @@
 class ObjectWithValidation {
     constructor(nameForm) {
         this._form = document.querySelector(`form[name="${nameForm}"]`);
+        this._action = this._form.action;
         this._fields = this._form.querySelectorAll('input[name]');
         this._btn = document.getElementById('submitButton');
         this._result = document.getElementById('resultContainer');
@@ -51,8 +52,11 @@ class ObjectWithValidation {
         }
 
         let phoneField = this._form.querySelector('input[name="phone"]');
-        phoneField.addEventListener('keyup', function (event) {
-            toPhoneFormat(this);
+        phoneField.addEventListener('keydown', function (event) {
+            let tmp = this;
+            setTimeout(function () {
+                toPhoneFormat(tmp);
+            }, 50);
         });
         phoneField.addEventListener('change', function (event) {
             toPhoneFormat(this);
@@ -140,7 +144,7 @@ class ObjectWithValidation {
                 name = field.name.toLowerCase(),
                 fn = this[`${name}Validator`];
 
-            field.className = field.className.replace('error', '');
+            field.className = field.className.replace('error', '').trim();
 
             if (typeof fn === 'function') {
                 let isValid = fn.call(this);
@@ -156,24 +160,75 @@ class ObjectWithValidation {
     }
 
     submit() {
-        let isValid = this.validate().isValid;
+        let self = this;
+
+        let isValid = this.validate().isValid,
+            btn = this._btn,
+            res = this._result;
+
+        res.innerText = '';
+        res.className = res.className
+            .replace('success', '')
+            .replace('error', '')
+            .replace('progress', '')
+            .trim();
 
         if (isValid) {
-            this._btn.disabled = true;
+            btn.disabled = true;
+
+            let xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                    btn.disabled = false;
+                    if (xhr.status === 200) {
+                        let response = xhr.response;
+                        try {
+                            response = JSON.parse(response);
+                            switch (response.status) {
+                                case 'success':
+                                    res.innerText = 'Success';
+                                    res.className += ' success';
+                                    break;
+                                case 'error':
+                                    res.innerText = response.reason;
+                                    res.className += ' error';
+                                    break;
+                                case 'progress':
+                                    res.innerText = 'Progress';
+                                    res.className += ' progress';
+                                    setTimeout(function () {
+                                        self.submit();
+                                    }, response.timeout);
+                                    break;
+                            }
+
+                        } catch (e) {
+                            console.error('Error: %s', e.message);
+                        }
+                    } else {
+                        console.error('Error');
+                    }
+                }
+            };
+            xhr.open('post', this._action, true);
+            xhr.send(this.getData());
         }
+    }
+
+    request() {
+
     }
 }
 
-let obj = undefined;
+let MyForm = undefined;
 
 document.addEventListener('DOMContentLoaded', function () {
+    MyForm = new ObjectWithValidation('myForm');
+    MyForm.bindEvents();
 
-    obj = new ObjectWithValidation('myForm');
-    obj.bindEvents();
-
-    obj.setData({
-        fio: 'V A A',
-        email: 'mail@ya.ru',
+    MyForm.setData({
+        fio: 'User Name Surname',
+        email: 'example@ya.ru',
         phone: '+7(111)111-11-11'
     })
 }, false);
